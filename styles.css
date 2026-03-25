@@ -66,6 +66,41 @@ h1 {
   font-size: 0.98rem;
 }
 
+.language-switch {
+  display: inline-flex;
+  gap: 0.3rem;
+  margin-top: 1rem;
+  padding: 0.28rem;
+  border: 1px solid rgba(47, 90, 75, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 8px 20px rgba(20, 27, 24, 0.08);
+}
+
+.language-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.language-button:hover,
+.language-button:focus-visible {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.language-button.is-active {
+  background: var(--accent);
+  color: #fff;
+  transform: none;
+}
+
 .page-shell {
   width: min(980px, 100% - 2rem);
   margin: 0 auto 5rem;
@@ -178,6 +213,10 @@ h1 {
   background: #f8f8f3;
 }
 
+.audio-area.is-disabled {
+  background: #f4f2ea;
+}
+
 .audio-area h3 {
   font-size: 0.95rem;
   margin-bottom: 0.45rem;
@@ -217,6 +256,12 @@ audio {
   margin: 0 0 0.95rem;
   font-size: clamp(0.98rem, 2.2vw, 1.06rem);
   word-break: keep-all;
+}
+
+body[data-language="en"] .body-area p,
+body[data-language="en"] .page-link-title,
+body[data-language="en"] #pageTitle {
+  word-break: normal;
 }
 
 .body-area a {
@@ -335,6 +380,11 @@ audio {
 
   .subtitle {
     font-size: 0.9rem;
+  }
+
+  .language-switch {
+    width: 100%;
+    justify-content: center;
   }
 
   .page-link {

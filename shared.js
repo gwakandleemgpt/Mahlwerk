@@ -1,14 +1,29 @@
-﻿const KNOWN_SECTIONS = [
-  "전시물 소개",
-  "커피그라인더의 형태적 분류",
-  "개별 그라인더",
+const SECTION_TITLE_VARIANTS = [
+  ["전시물 소개", "Exhibition Highlights"],
+  ["커피그라인더의 형태적 분류", "Types of Coffee Grinders"],
+  ["개별 그라인더", "Individual Grinders"],
 ];
 
+const SUPPORTED_LANGUAGES = new Set(["ko", "en"]);
 const pageHeadingPattern = /^(\d{1,2})\.\s*(.+)$/;
 const assetAvailabilityCache = new Map();
+const sectionIndexByTitle = new Map(
+  SECTION_TITLE_VARIANTS.flatMap((titles, index) =>
+    titles.map((title) => [title, index + 1])
+  )
+);
 
 function normalizeNewlines(text) {
   return text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
+export function normalizeLanguage(value) {
+  return SUPPORTED_LANGUAGES.has(value) ? value : "ko";
+}
+
+export function parseLanguageFromQuery(search = window.location.search) {
+  const params = new URLSearchParams(search);
+  return normalizeLanguage(params.get("lang"));
 }
 
 export function escapeHtml(value) {
@@ -80,11 +95,12 @@ export function parseDescriptionText(rawText) {
       continue;
     }
 
-    if (KNOWN_SECTIONS.includes(line)) {
+    const sectionNumber = sectionIndexByTitle.get(line);
+    if (sectionNumber) {
       flushSection();
       currentSection = {
         title: line,
-        number: KNOWN_SECTIONS.indexOf(line) + 1,
+        number: sectionNumber,
         pages: [],
       };
       continue;
@@ -125,7 +141,7 @@ export function parseDescriptionText(rawText) {
 export async function loadDescription(path = "description.txt") {
   const response = await fetch(path, { cache: "no-store" });
   if (!response.ok) {
-    throw new Error(`설명 파일을 읽을 수 없습니다: ${response.status}`);
+    throw new Error(`Failed to load ${path}: ${response.status}`);
   }
   return response.text();
 }
@@ -209,14 +225,39 @@ export function parsePageIdFromQuery(search = window.location.search) {
   return null;
 }
 
-export function makeRelativePageUrl(id) {
-  return `?id=${encodeURIComponent(id)}`;
+function makeQueryString({ id = null, language = "ko" } = {}) {
+  const params = new URLSearchParams();
+  const normalizedLanguage = normalizeLanguage(language);
+
+  if (normalizedLanguage === "en") {
+    params.set("lang", "en");
+  }
+  if (id) {
+    params.set("id", id);
+  }
+
+  return params.toString();
 }
 
-export function makeAbsolutePageUrl(id) {
+export function makeRelativePageUrl(id, language = "ko") {
+  const query = makeQueryString({ id, language });
+  return query ? `?${query}` : "?";
+}
+
+export function makeRelativeListUrl(language = "ko", path = window.location.pathname) {
+  const query = makeQueryString({ language });
+  return query ? `${path}?${query}` : path;
+}
+
+export function makeAbsolutePageUrl(id, language = "ko") {
   const indexPath = window.location.pathname.replace(/\/[^/]*$/, "/index.html");
   const url = new URL(indexPath, window.location.origin);
+
+  if (normalizeLanguage(language) === "en") {
+    url.searchParams.set("lang", "en");
+  }
   url.searchParams.set("id", id);
+
   return url.toString();
 }
 

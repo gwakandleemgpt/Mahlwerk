@@ -1,10 +1,11 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mahlwerk 전시 QR 코드 모음">
-  <title>Mahlwerk QR 코드 모음</title>
+  <meta name="description" content="Mahlwerk 관리자용 QR 코드 인쇄 페이지">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mahlwerk 관리자용 QR 코드 인쇄</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -13,14 +14,14 @@
 <body>
   <header class="header">
     <div>
-      <p class="eyebrow">PRINTABLE</p>
-      <h1>전시 설명 QR 코드 모음</h1>
-      <p class="desc">QR 상단 번호(예: 3-1)를 기준으로 전시물 하단 라벨과 맞춰 붙이면 됩니다.</p>
-      <p class="count">총 <strong id="totalCount">0개</strong></p>
+      <p class="eyebrow">ADMIN PRINT</p>
+      <h1 id="headerTitle">관리자용 전시 QR 코드 인쇄</h1>
+      <p id="headerDesc" class="desc">관리자용 페이지입니다. QR 상단 번호(예: 3-1)를 기준으로 전시물 하단 라벨과 맞춰 붙이면 됩니다.</p>
+      <p id="countLine" class="count">총 0개</p>
     </div>
     <div class="header-actions">
       <button id="printButton" type="button">인쇄</button>
-      <a href="./index.html">설명 페이지로 이동</a>
+      <a id="backLink" href="./index.html">목차 페이지로 이동</a>
     </div>
   </header>
 
